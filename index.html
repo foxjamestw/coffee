@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>咖啡風味雷達圖 (ECharts)</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .sliders {
+            margin-bottom: 20px;
+        }
+        .slider-container {
+            margin-bottom: 10px;
+        }
+        label {
+            display: inline-block;
+            width: 50px;
+        }
+        #radar-chart {
+            width: 400px;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sliders">
+            <div class="slider-container">
+                <label for="acidity">酸度:</label>
+                <input type="range" id="acidity" min="0" max="3" value="5">
+                <span id="acidity-value">5</span>
+            </div>
+            <div class="slider-container">
+                <label for="bitterness">苦度:</label>
+                <input type="range" id="bitterness" min="0" max="3" value="5">
+                <span id="bitterness-value">5</span>
+            </div>
+            <div class="slider-container">
+                <label for="sweetness">甜度:</label>
+                <input type="range" id="sweetness" min="0" max="3" value="5">
+                <span id="sweetness-value">5</span>
+            </div>
+            <div class="slider-container">
+                <label for="aroma">香氣:</label>
+                <input type="range" id="aroma" min="0" max="3" value="2">
+                <span id="aroma-value">5</span>
+            </div>
+            <div class="slider-container">
+                <label for="aftertaste">餘韻:</label>
+                <input type="range" id="aftertaste" min="0" max="3" value="1">
+                <span id="aftertaste-value">5</span>
+            </div>
+        </div>
+        <div id="radar-chart"></div>
+    </div>
+
+    <script>
+        const chart = echarts.init(document.getElementById('radar-chart'));
+
+        function updateChart() {
+            const acidity = document.getElementById('acidity').value;
+            const bitterness = document.getElementById('bitterness').value;
+            const sweetness = document.getElementById('sweetness').value;
+            const aroma = document.getElementById('aroma').value;
+            const aftertaste = document.getElementById('aftertaste').value;
+
+            document.getElementById('acidity-value').textContent = acidity;
+            document.getElementById('bitterness-value').textContent = bitterness;
+            document.getElementById('sweetness-value').textContent = sweetness;
+            document.getElementById('aroma-value').textContent = aroma;
+            document.getElementById('aftertaste-value').textContent = aftertaste;
+
+            const option = {
+                
+                title: {
+                    text: '咖啡風味雷達圖'
+                },
+                
+                
+                tooltip: {},
+                legend: {
+                    data: ['風味參數']
+                },
+                radar: {
+                    //shape: 'circle',
+                    radius: 120,
+                    splitNumber: 3,
+                    indicator: [
+                        { name: '酸度', max: 3 },
+                        { name: '苦度', max: 3 },
+                        { name: '甜度', max: 3 },
+                        { name: '香氣', max: 3 },
+                        { name: '餘韻', max: 3 }
+                    ],
+                    splitArea: {
+                        areaStyle: {
+                          color: ['#fdfefe', '#d5f5e3 ', '#fdfefe', '#f9e79f'],
+                          //shadowColor: 'rgba(0, 0, 0, 0.5)',
+                          shadowBlur: 3
+                        }
+                     },
+                },
+                series: [{
+                    name: '風味參數',
+                    type: 'radar',
+                     emphasis: {
+                        lineStyle: {
+                          width: 1
+                            }
+                    },
+                    areaStyle: {},
+                    data: [
+                        {
+                            value: [acidity, bitterness, sweetness, aroma, aftertaste],
+                            name: '風味參數',
+                            areaStyle: {
+                                color: 'rgba(249, 159, 159, 0.4)'
+                              },
+                            lineStyle:{
+                                width: 1,
+                                color: 'rgba(249, 159, 159, 1)'
+                            }
+                        }
+                    ]
+                }]
+            };
+
+            chart.setOption(option);
+        }
+
+        document.getElementById('acidity').addEventListener('input', updateChart);
+        document.getElementById('bitterness').addEventListener('input', updateChart);
+        document.getElementById('sweetness').addEventListener('input', updateChart);
+        document.getElementById('aroma').addEventListener('input', updateChart);
+        document.getElementById('aftertaste').addEventListener('input', updateChart);
+
+        updateChart();
+    </script>
+</body>
+</html>
+
