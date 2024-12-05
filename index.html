@@ -12,16 +12,13 @@
             font-family: 'Noto Sans TC', sans-serif;
             font-size: 16px;
             line-height: 1.5;
+            padding-bottom: 70px; /* 為固定的導航欄留出空間 */
         }
         .container {
             max-width: 800px;
         }
         h1 {
             font-size: 30px;
-            font-weight: bold;
-        }
-		h5 {
-            font-size: 20px;
             font-weight: bold;
         }
         .card {
@@ -44,6 +41,9 @@
         .form-check-input {
             margin-top: 0;
         }
+        .navbar {
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
         @media (max-width: 576px) {
             body {
                 font-size: 14px;
@@ -54,25 +54,25 @@
         }
     </style>
 </head>
-<body class="d-flex justify-content-center align-items-center min-vh-100">
-    <div class="container">
+<body class="d-flex flex-column min-vh-100">
+    <div class="container flex-grow-1">
         <h1 class="text-center mb-4">咖啡風味評分</h1>
 
         <div class="card mb-3">
             <div class="card-body text-center">
-                <h5 class="card-title">好喝程度</h5>
+                <h5 class="card-title">問題1. 好喝程度</h5>
                 <div class="star-rating">
                     <span class="star" data-rating="1">&#9733;</span>
                     <span class="star" data-rating="2">&#9733;</span>
                     <span class="star" data-rating="3">&#9733;</span>
                 </div>
-                <p class="mt-2">評分: <span id="taste-rating">3</span> 顆星</p>
+                <p class="mt-2">評分: <span id="taste-rating">0</span> 顆星</p>
             </div>
         </div>
 
         <div class="card mb-3">
             <div class="card-body text-center">
-                <h5 class="card-title">咖啡豆品項</h5>
+                <h5 class="card-title">問題2. 咖啡豆品項</h5>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="coffee-type" id="geisha" value="藝妓">
                     <label class="form-check-label" for="geisha">
@@ -91,7 +91,7 @@
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title text-center">風味參數評分</h5>
-                <div class="slider-container mb-3">
+                <div class="mb-3">
                     <label for="acidity" class="form-label">酸度: <span id="acidity-value">3</span></label>
                     <input type="range" class="form-range" id="acidity" min="0" max="5" value="3">
                 </div>
@@ -122,6 +122,13 @@
         </div>
     </div>
 
+    <nav class="navbar fixed-bottom navbar-light bg-light">
+        <div class="container-fluid justify-content-center">
+            <button type="button" class="btn btn-primary me-2" id="submitBtn">提交</button>
+            <button type="button" class="btn btn-secondary" id="cancelBtn">取消</button>
+        </div>
+    </nav>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const chart = echarts.init(document.getElementById('radar-chart'));
@@ -141,44 +148,25 @@
 
             const option = {
                 title: {
-                    //text: '咖啡風味雷達圖'
+                    text: '咖啡風味雷達圖'
                 },
                 tooltip: {},
                 radar: {
-                    radius: 120,
-                    splitNumber: 3,
                     indicator: [
                         { name: '酸度', max: 5 },
                         { name: '苦度', max: 5 },
                         { name: '甜度', max: 5 },
                         { name: '香氣', max: 5 },
                         { name: '餘韻', max: 5 }
-                    ],
-                    splitArea: {
-                        areaStyle: {
-                          color: ['#fdfefe', '#fdfefe ', '#fdfefe', '#f9e79f'],
-                          //shadowColor: 'rgba(0, 0, 0, 0.5)',
-                          shadowBlur: 3
-                        }
-                     },
+                    ]
                 },
                 series: [{
                     name: '風味參數',
                     type: 'radar',
-					emphasis: {
-                        lineStyle: {
-                          width: 1
-                            }
-                    },
-                    areaStyle: {color: 'rgba(249, 159, 159, 0.4)'},
                     data: [
                         {
                             value: [acidity, bitterness, sweetness, aroma, aftertaste],
-                            name: '風味參數',
-							lineStyle:{
-                                width: 1,
-                                color: 'rgba(249, 159, 159, 1)'
-                            }
+                            name: '風味參數'
                         }
                     ]
                 }]
@@ -213,9 +201,21 @@
         // 初始化圖表
         updateChart();
 
-        // 響應��調整
+        // 響應式調整
         window.addEventListener('resize', function() {
             chart.resize();
+        });
+
+        // 提交按鈕點擊事件
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            alert('提交成功！');
+        });
+
+        // 取消按鈕點擊事件
+        document.getElementById('cancelBtn').addEventListener('click', function() {
+            if (confirm('確定要取消嗎？所有數據將被重置。')) {
+                location.reload();
+            }
         });
     </script>
 </body>
